@@ -16,13 +16,13 @@ Well, OK, it isn't quite that simple. #ZDD is like a 'Zero Defect policy', or #N
 
 ## Current situation
 
-Last week we learned that PyPi has [suspended new user accounts and projects|https://www.bleepingcomputer.com/news/security/pypi-temporarily-pauses-new-users-projects-amid-high-volume-of-malware/] due to the tsunami of malicious supply chain exploits and typo-squatting attempts:
+Last week we learned that PyPi has [suspended new user accounts and projects](https://www.bleepingcomputer.com/news/security/pypi-temporarily-pauses-new-users-projects-amid-high-volume-of-malware/) due to the tsunami of malicious supply chain exploits and typo-squatting attempts:
 
 > The volume of malicious users and malicious projects being created on the index in the past week has outpaced our ability to respond to it in a timely fashion
 
 Supply chain vulnerabilities are nothing new, but the volume of attacks has been growing exponentially and all the major repositories PyPi, maven, RubyGems, npm are all suffering from the same onslaught. Given the potential value of a supply chain attack, this is not going to get better any time soon.
 
-There have been some advances in this area, around such things as [SBOM|https://about.gitlab.com/blog/2022/10/25/the-ultimate-guide-to-sboms/], but the reality is that a complete SBOM for anything like e.g. React is at best years away. In the meanwhile we have very real issues.
+There have been some advances in this area, around such things as [SBOM](https://about.gitlab.com/blog/2022/10/25/the-ultimate-guide-to-sboms/), but the reality is that a complete SBOM for anything like e.g. React is at best years away. In the meanwhile we have very real issues.
 
 We have been living in an age of blissful naivety, where we trust everything that the public Internet - and our module repositories, provides us. We have optimised for moving fast and breaking things. We have been leaving our front doors open, and inviting passing strangers into our houses.
 
@@ -30,7 +30,7 @@ Now the majority of people are good people, but the times when we could get away
 
 ## Create-blah-app case study
 
-Whilst at a client last year we built a simple 'create-react-app'[1] style utility to provide template-based micro-service boilerplate creation. Our initial proof of concept used Yeoman-generator and had 38877 dependencies. Yeoman-generator itself has 541 dependencies and uses 36MB of space. This project required more than the usual number of npm clean installs, because of the very nature of a create-blah-app style boilerplate generator, which makes any delays in running the testing suite particularly irksome.
+Whilst at a client last year we built a simple 'create-react-app'[^1] style utility to provide template-based micro-service boilerplate creation. Our initial proof of concept used Yeoman-generator and had 38877 dependencies. Yeoman-generator itself has 541 dependencies and uses 36MB of space. This project required more than the usual number of npm clean installs, because of the very nature of a create-blah-app style boilerplate generator, which makes any delays in running the testing suite particularly irksome.
 
 Once everything was working, I resolved to make the situation better and spent a couple of days pruning down the transitive dependency tree by the use of two main strategies:
 
@@ -41,7 +41,7 @@ In many cases I found it was possible to use the first strategy and replace a de
 
 > Everything in software is a trade-off
 
-When replacing a dependency with a lighter-weight alternative, I found that using sites like [PackagePhobia|https://packagephobia.com/result?p=yeoman-generator] and [BundlePhobia|https://bundlephobia.com/package/yeoman-generator@5.9.0] were helpful. There's also [npmgraph|https://npmgraph.js.org/?q=yeoman-generator] and [Avanka|https://npm.anvaka.com/#/view/2d/yeoman-generator] that give a more visual output.
+When replacing a dependency with a lighter-weight alternative, I found that using sites like [PackagePhobia](https://packagephobia.com/result?p=yeoman-generator) and [BundlePhobia](https://bundlephobia.com/package/yeoman-generator@5.9.0) were helpful. There's also [npmgraph](https://npmgraph.js.org/?q=yeoman-generator) and [Avanka](https://npm.anvaka.com/#/view/2d/yeoman-generator) that give a more visual output.
 
 At the end of this I was able to reduce the size of the complete dependency chain from 38877 to just 52 modules. Apart from the enormous reduction in attack surface, this represented a very much faster build and test cycle, and a much nicer developer experience overall.
 
@@ -123,4 +123,4 @@ And _even if you are_ one of the lucky ones, all that provenance tells you is th
 At some point we will probably have fully provenance-compatible modules that have provenance from all of their transitive dependencies, which will be wonderful. It still won't prove anything about the non-functional requirements of any of that code, just that it hasn't been hijacked by some typo-squatting supply-chain attack.
 
 
-[1] For reference: `create-react-app my-react-app` takes 1m34s on my dev laptop and installs 825 modules taking up 330Mb of space (create-react-app v5.0.1). People refer to React as a 'lightweight framework', I'm not sure I can reasonably agree, given these figures.
+[^1]: For reference: `create-react-app my-react-app` takes 1m34s on my dev laptop and installs 825 modules taking up 330Mb of space (create-react-app v5.0.1). People refer to React as a 'lightweight framework', I'm not sure I can reasonably agree, given these figures.
